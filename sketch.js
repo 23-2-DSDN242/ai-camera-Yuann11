@@ -1,10 +1,10 @@
-let sourceImg=null;
-let maskImg=null;
-let renderCounter=0;
+let sourceImg = null;
+let maskImg = null;
+let renderCounter = 0;
 
-// change these three lines as appropiate
-let sourceFile = "input_1.jpg";
-let maskFile   = "mask_1.png";
+
+let sourceFile = "input_3.jpg";
+let maskFile = "mask_3.png";
 let outputFile = "output_1.png";
 
 function preload() {
@@ -12,42 +12,111 @@ function preload() {
   maskImg = loadImage(maskFile);
 }
 
-function setup () {
+function setup() {
   let main_canvas = createCanvas(1920, 1080);
   main_canvas.parent('canvasContainer');
 
-  imageMode(CENTER);
-  noStroke();
-  background(255, 0, 0);
+  // imageMode(CENTER);
+  background(0);
   sourceImg.loadPixels();
   maskImg.loadPixels();
 }
+ // Sets resolution of the grid
+ let gridsize = 10
 
-function draw () {
-  for(let i=0;i<4000;i++) {
-    let x = floor(random(sourceImg.width));
-    let y = floor(random(sourceImg.height));
-    let pix = sourceImg.get(x, y);
-    let mask = maskImg.get(x, y);
-    fill(pix);
-    if(mask[0] > 128) {
-      let pointSize = 10;
-      ellipse(x, y, pointSize, pointSize);
-    }
-    else {
-      let pointSize = 20;
-      rect(x, y, pointSize, pointSize);    
+ // Sets size of the ellipse
+ let circsize = 2
+
+ // Sets stroke weight of the grid where the mask is Black
+ let gridWeightB = .05
+
+ // Sets stroke weight of the grid where the mask is white
+ let gridWeightW = .5
+
+ // Determines the strength of parallax
+ let paraStrength = 5
+function draw() {
+
+ 
+
+  // Defines a singular pixel
+ 
+
+  // Draws the pixel in the grid
+  for (var y = 0; y < sourceImg.height; y = y + gridsize) {
+    for (var x = 0; x < sourceImg.width; x = x + gridsize) {
+
+      // Defines the colour of a given pixel of the input image
+      let pix = sourceImg.get(x, y)
+
+      // Defines the colour of a given pixel of the mask image
+      let mask = maskImg.get(x, y);
+
+      // If the mask is black...
+      if (mask[0] >200) {
+
+        // Sets the pixel to draw with only a stroke and in the colour of the input image
+        fill(0,0,155)
+        strokeWeight(gridWeightB)
+        stroke(pix)
+
+        // Draws the pixel
+        draw_Pixel(x,y)
+
+        // Sets the ellipse to draw with only a fill and in the colour of the input image
+        noStroke()
+        fill(pix)
+
+        // Draws the ellipse at each vertice of the pixel
+        ellipse(x + (960 - x) / (pix[0] / 5), y + (640 - y) / (pix[0] / 5), circsize, circsize)
+
+        // If the mask is not black...
+      } else {
+
+        // Sets the pixel to draw with a black stroke and with a fill in the colour of the input image
+        fill(pix)
+        strokeWeight(gridWeightW)
+        stroke(0)
+
+        // Draws the pixel
+        draw_Pixel(x,y)
+
+        // Sets the ellipse to draw with a black fill and no stroke
+        noStroke()
+        fill(0)
+
+        // Draws the ellipse at each vertice of the pixel
+        ellipse(x + (960 - x) / (pix[0] / 5), y + (640 - y) / (pix[0] / 5), circsize, circsize)
+      }
     }
   }
   renderCounter = renderCounter + 1;
-  if(renderCounter > 10) {
+  if (renderCounter > 15) {
     console.log("Done!")
     noLoop();
     // uncomment this to save the result
-    // saveArtworkImage(outputFile);
+    //saveArtworkImage(outputFile);
   }
 }
+function draw_Pixel(x,y) {
 
+  // Defines the centre of the image
+
+ push ()
+  
+  beginShape()
+  pix = sourceImg.get(x, y)
+  vertex(x+random (-5,5)  , y +random (-5,5) )
+  pix = sourceImg.get(x + gridsize, y)
+  vertex(x + gridsize +random (-5,5), y +random (-5,5) )
+  pix = sourceImg.get(x + gridsize, y + gridsize)
+  vertex(x + gridsize+random (-5,5) , y + gridsize +random (-5,5) )
+  pix = sourceImg.get(x, y + gridsize)
+  vertex(x +random (-5,5) , y + gridsize +random (-5,5) )
+  endShape(CLOSE)
+
+  pop ()
+}
 function keyTyped() {
   if (key == '!') {
     saveBlocksImages();
