@@ -3,9 +3,9 @@ let maskImg = null;
 let renderCounter = 0;
 
 
-let sourceFile = "input_3.jpg";
-let maskFile = "mask_3.png";
-let outputFile = "output_1.png";
+let sourceFile = "input_6.jpg";
+let maskFile = "mask_6.png";
+let outputFile = "output_6.png";
 
 function preload() {
   sourceImg = loadImage(sourceFile);
