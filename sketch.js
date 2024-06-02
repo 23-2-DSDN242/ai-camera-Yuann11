@@ -17,15 +17,16 @@ function setup() {
   main_canvas.parent('canvasContainer');
 
   // imageMode(CENTER);
-  background(0);
+  background(200);
   sourceImg.loadPixels();
   maskImg.loadPixels();
+  noLoop()
 }
  // Sets resolution of the grid
  let gridsize = 10
 
  // Sets size of the ellipse
- let circsize = 2
+ let circsize = 15
 
  // Sets stroke weight of the grid where the mask is Black
  let gridWeightB = .05
@@ -67,36 +68,23 @@ function draw() {
         noStroke()
         fill(pix)
 
-        // Draws the ellipse at each vertice of the pixel
-        ellipse(x + (960 - x) / (pix[0] / 5), y + (640 - y) / (pix[0] / 5), circsize, circsize)
-
-        // If the mask is not black...
+  
       } else {
 
         // Sets the pixel to draw with a black stroke and with a fill in the colour of the input image
         fill(pix)
+       
         strokeWeight(gridWeightW)
-        stroke(0)
+        stroke(255)
 
         // Draws the pixel
         draw_Pixel(x,y)
 
-        // Sets the ellipse to draw with a black fill and no stroke
-        noStroke()
-        fill(0)
-
-        // Draws the ellipse at each vertice of the pixel
-        ellipse(x + (960 - x) / (pix[0] / 5), y + (640 - y) / (pix[0] / 5), circsize, circsize)
+        
       }
     }
   }
-  renderCounter = renderCounter + 1;
-  if (renderCounter > 15) {
-    console.log("Done!")
-    noLoop();
-    // uncomment this to save the result
-    //saveArtworkImage(outputFile);
-  }
+
 }
 function draw_Pixel(x,y) {
 
